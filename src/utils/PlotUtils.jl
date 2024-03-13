@@ -84,6 +84,7 @@ function waterfall_plot(x, y, z; zmin = minimum(z), lw = 1., colorline = :auto, 
 
     ax.zlabelsize = labelsize
     ax.zlabelfont = :bold
+    ax.zticklabelpad = 5.
 
     ax.xticklabelsize = ticklabelsize
     ax.yticklabelsize = ticklabelsize
@@ -95,11 +96,11 @@ end
 function plot(x, y1, y2; xlab = "x", ylab = "y", lw = 1., col = (:blue, :red), ls = (:solid, :dash))
     fig = Figure()
     ax = Axis(fig[1,1], xlabel = xlab, ylabel = ylab)
-    lines!(ax, x, y1, color = col[1], linewidth = lw, linestyle = ls[1])
-    lines!(ax, x, y2, color = col[2], linewidth = lw, linestyle = ls[2])
+    lines!(ax, x, y1, color = col[1], linewidth = lw, linestyle = ls[1], label = "Reference")
+    lines!(ax, x, y2, color = col[2], linewidth = lw, linestyle = ls[2], label = "Estimation")
 
     xlims!(ax, minimum(x), maximum(x))
-
+    axislegend(position = :rb, backgroundcolor = (:white, 0.75))
     # Font
     labelsize = 18.
     ticklabelsize = 14.

@@ -204,46 +204,12 @@ function resp(K, M, C, F, freq)
     nf = length(freq)
     ndofs = size(K, 1)
     X = Matrix{ComplexF64}(undef, ndofs, nf)
+
+    p = Progress(nf - 1, desc = "Response calculation...", showspeed = true, color = :black)
     @inbounds @views for (i, ω) in enumerate(ωf)
-        X[:, i] .= -ω^2 .*((K - ω^2*M + 1im*ω*C)\F[:, i])
+        next!(p)
+        X[:, i] .= -ω^2*((K + 1im*ω*C - ω^2*M)\F[:, i])
     end
 
     return X
-end
-
-"""
-    select_config(config, Npoint, Δx)
-
-Select the measurement configuration.
-
-# Inputs
-- `config`: configuration number
-- `L`: length of the beam
-- `Npoint`: number of points
-- `Δx`: shift from the left end of the beam
-
-# Outputs
-- `X`: positions of the measurement points
-- `Nx`: location of the observation/excitation point
-
-# Example
-```julia-repl
-julia> X, Nx = select_config(1, 1., 20)
-```
-"""
-function select_config(config, L, Npoint = 20, Δx = 5e-2)
-    Xmes = LinRange(Δx, L - Δx, Npoint)
-
-    if config == 1			     # Maillage de mesure dense
-        X = Xmes
-        Nx = 13
-    elseif config == 2		     # Maillage normal
-        X = Xmes[1:2:end]
-        Nx = 7
-    else     				     # Maillage grossier
-        X = Xmes[1:4:end]
-        Nx = 4
-    end
-
-    return X, Nx
 end
