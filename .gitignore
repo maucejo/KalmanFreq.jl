@@ -6,8 +6,9 @@
 /data
 /videos
 /plots
-/notebooks
 /_research
+/.github
+/.vscode
 
 ################################################################################
 #                                    Julia                                     #
