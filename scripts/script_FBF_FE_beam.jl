@@ -1,4 +1,4 @@
-using DrWatson, MKL, GLMakie
+using DrWatson, MKL, GLMakie, LinearAlgebra
 @quickactivate "KalmanFreq"
 
 using KalmanFreq
@@ -65,8 +65,8 @@ obs_dof = meas_dofs[Nₒ]
 exc_dof = id_dofs[Nₑ]
 
 ## Definition of the excitation vector
-exc_type = :constant                    # Constant excitation
-# exc_type = :random                    # Random excitation
+# exc_type = :constant                    # Constant excitation
+exc_type = :random                    # Random excitation
 F = excitation(exc_type, length(freq))  # Force spectrum
 Fref = zeros(ndofs, length(freq))       # Reference force vector
 Fref[exc_dof, :] .= F
