@@ -175,7 +175,7 @@ function excitation(exc_type, nf)
     if exc_type == :constant
         F = ones(nf)
     else
-        F = 2 .+ 0.1randn(MersenneTwister(0), nf)
+        F = 2 .+ 0.1randn(MersenneTwister(1000), nf)
     end
 
     return F

@@ -19,7 +19,7 @@ julia> y = agwn(x, 25.)
 function agwn(x, snr_dB, rst = true)
     # Reset the RNG if required
     if rst
-        rng = MersenneTwister(0)
+        rng = MersenneTwister(1000)
     end
 
     N, L = size(x)                          # Dimensions des données
