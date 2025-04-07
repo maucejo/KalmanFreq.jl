@@ -110,7 +110,7 @@ function RVR(A, b, R)
         SA = Ref(S).*A # Equivalent to [S*a for a in A]
         Sb = S*b
 
-        p = Progress(nf, desc = "RVR...", showspeed = true, color = :black)
+        p = Progress(nf, desc = "RVR...", showspeed = true)
         @inbounds @views for f in eachindex(A)
             next!(p)
             X[:, f] .= RVR_(SA[f], Sb[:, f])[1]
@@ -208,7 +208,7 @@ function lq_reg(A, b, q, R = I(size(b, 1)); type = :mult, method = :lc)
         SA = Ref(S).*A # Equivalent to [S*a for a in A]
         Sb = S*b
 
-        p = Progress(nf, desc = "lq-regularization...", showspeed = true, color = :black)
+        p = Progress(nf, desc = "lq-regularization...", showspeed = true)
         @inbounds @views for f in eachindex(A)
             next!(p)
             X[:, f] .= lq_reg_(SA[f], Sb[:, f], q)

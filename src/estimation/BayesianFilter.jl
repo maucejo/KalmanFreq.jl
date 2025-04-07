@@ -156,7 +156,7 @@ function bfilter(y, ss, ic)
     P̃ₖ = ic.P₀ˣ .+ BP .+ BP' .+ Bₖ*ic.P₀ᵘ*Bₖ' + Q
 
     # Filtering loop
-    p = Progress(nf - 1, desc = "Bayesian filtering...", showspeed = true, color = :black)
+    p = Progress(nf - 1, desc = "Bayesian filtering...", showspeed = true)
     @views @inbounds for k ∈ 2:nf
         next!(p)
         Bₖ .= B[k]

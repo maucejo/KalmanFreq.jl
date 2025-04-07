@@ -1,10 +1,8 @@
 module KalmanFreq
 
-using PrecompileTools
-
-using MKL
-
-using Parameters, Random, LinearAlgebra, Optim, Statistics, FFTW, SpecialFunctions, StatsBase, ProgressMeter, BlockDiagonals, SparseArrays, LazyGrids
+using BlockDiagonals, FFTW, LazyGrids, LinearAlgebra, Optim,
+      Parameters, PrecompileTools, ProgressMeter, Random,
+      SparseArrays, SpecialFunctions, Statistics, StatsBase
 
 include("gendata/VibData.jl")
 export Beam, eigval, eigmode, excitation, resp, frf, frf_modal

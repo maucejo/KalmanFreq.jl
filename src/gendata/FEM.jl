@@ -205,7 +205,7 @@ function resp(K, M, C, F, freq)
     ndofs = size(K, 1)
     X = Matrix{ComplexF64}(undef, ndofs, nf)
 
-    p = Progress(nf - 1, desc = "Response calculation...", showspeed = true, color = :black)
+    p = Progress(nf - 1, desc = "Response calculation...", showspeed = true)
     @inbounds @views for (i, ω) in enumerate(ωf)
         next!(p)
         X[:, i] .= -ω^2*((K + 1im*ω*C - ω^2*M)\F[:, i])

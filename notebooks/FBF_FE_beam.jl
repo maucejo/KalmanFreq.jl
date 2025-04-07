@@ -1,18 +1,21 @@
 ### A Pluto.jl notebook ###
-# v0.19.40
+# v0.20.4
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ ca4d9603-4fbf-44c3-9ed9-b17a3223b23f
 begin
-	using Pkg
+	using Pkg, ShareAdd
 	Pkg.activate("../.")
 
-	using DrWatson, MKL, CairoMakie
+	using DrWatson
 
 	using LinearAlgebra
 	include(srcdir("utils", "PlotUtils.jl"))
+
+	# Note: I use ShareAdd to load the package in the current environment. This avoids to have GLMakie or CairoMakie as dependencies in the project. I could also implement an extension for this, but I didn't.
+	@usingany CairoMakie
 
 	using PlutoUI
 	PlutoUI.TableOfContents(title = "Outline", indent = true)
@@ -266,7 +269,7 @@ html"""
 
 # ╔═╡ 27fd0de8-0279-4f33-950c-968996691f5b
 begin
-fig_bfw = waterfall_plot(freq, Xᵢ,  real(u_bf), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_bf)), 1.12*maximum(real(u_bf))])
+fig_bfw = waterfall_plot(freq, Xᵢ,  abs.(u_bf), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_bf)), 1.12*maximum(abs.(u_bf))])
 end
 
 # ╔═╡ ee797fad-da24-49a5-96bf-b37fdf0de5e8
@@ -276,7 +279,7 @@ html"""
 
 # ╔═╡ f89939c0-e2c1-4a3b-9a6c-afc221d96012
 begin
-fig_bfs = plot(freq, F, real(sol_bf.u[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.)
+fig_bfs = plot(freq, F, abs.(sol_bf.u[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.)
 end
 
 # ╔═╡ 0a746575-32d8-4899-ba1f-937d4e2b64a3
@@ -325,7 +328,7 @@ html"""
 
 # ╔═╡ 846d5216-81f7-4aa3-a37e-60a52b5bf856
 begin
-fig_bfrw = waterfall_plot(freq, Xᵢ,  real(u_bfr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [-1e-1 + minimum(real(u_bfr)), 1.12*maximum(real(u_bfr))])
+fig_bfrw = waterfall_plot(freq, Xᵢ,  abs.(u_bfr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [-1e-1 + minimum(abs.(u_bfr)), 1.12*maximum(abs.(u_bfr))])
 end
 
 # ╔═╡ 8b50b044-fd34-42d8-a139-876be32f66c2
@@ -335,7 +338,7 @@ html"""
 
 # ╔═╡ 229bde4d-bc6b-443c-a6fb-709a0f71ab7e
 begin
-fig_bfrs = plot(freq, F, real(u_bfr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.)
+fig_bfrs = plot(freq, F, abs.(u_bfr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.)
 end
 
 # ╔═╡ f7f19ede-8490-4f5c-b4b3-6ba61937fc62
@@ -392,7 +395,7 @@ html"""
 
 # ╔═╡ 031b3992-29de-4155-915d-0c78ab85ca3d
 begin
-fig_rvrw = waterfall_plot(freq, Xᵢ,  real(u_rvr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_rvr)), 1.12*maximum(real(u_rvr))])
+fig_rvrw = waterfall_plot(freq, Xᵢ,  abs.(u_rvr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_rvr)), 1.12*maximum(abs.(u_rvr))])
 end
 
 # ╔═╡ d3daf6b0-6926-418c-a768-6a72ba2756b9
@@ -402,7 +405,7 @@ html"""
 
 # ╔═╡ cc86a5e3-e772-408e-9af9-e6f25ff86433
 begin
-fig_rvrs = plot(freq, F, real(u_rvr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.)
+fig_rvrs = plot(freq, F, abs.(u_rvr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.)
 end
 
 # ╔═╡ e2b4349c-c0d9-4e27-b2d4-3db2bc704eaa
@@ -456,7 +459,7 @@ html"""
 
 # ╔═╡ 9494cb46-20f7-4549-91e3-bab8ed8331ac
 begin
-fig7 = waterfall_plot(freq, Xᵢ,  real(u_lq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_lq)), 1.12*maximum(real(u_lq))])
+fig7 = waterfall_plot(freq, Xᵢ,  abs.(u_lq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_lq)), 1.12*maximum(abs.(u_lq))])
 end
 
 # ╔═╡ 3dea323f-5030-4ffa-b9e4-52b47f861439
@@ -466,7 +469,7 @@ html"""
 
 # ╔═╡ 4ba30d0d-96f6-421c-a844-6aa5356a1559
 begin
-fig8 = plot(freq, F, real(u_lq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.)
+fig8 = plot(freq, F, abs.(u_lq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.)
 end
 
 # ╔═╡ 078ccdda-d1a8-4af1-b7f4-8b35e85949b7
@@ -521,7 +524,7 @@ html"""
 
 # ╔═╡ f275bea1-63f6-4093-8399-5fde069a38ba
 begin
-fig9 = waterfall_plot(freq, Xᵢ,  real(u_lpq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_lpq)), 1.12*maximum(real(u_lpq))])
+fig9 = waterfall_plot(freq, Xᵢ,  abs.(u_lpq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_lpq)), 1.12*maximum(abs.(u_lpq))])
 end
 
 # ╔═╡ 6ca3000d-d7d3-436e-86b2-96206cbd6a1a
@@ -531,7 +534,7 @@ html"""
 
 # ╔═╡ 342a0bda-c3b3-4a7a-86c1-633f0f9234f7
 begin
-fig10 = plot(freq, F,real(u_lpq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.)
+fig10 = plot(freq, F,abs.(u_lpq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.)
 end
 
 # ╔═╡ 2b2ae0de-371d-446e-bef4-a331466b4f47

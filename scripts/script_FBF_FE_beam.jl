@@ -1,5 +1,9 @@
-using DrWatson, MKL, GLMakie, LinearAlgebra
+using DrWatson, LinearAlgebra
 @quickactivate "KalmanFreq"
+
+# Note: I use ShareAdd to load the package in the current environment. This avoids to have GLMakie or CairoMakie as dependencies in the project. I could also implement an extension for this, but I didn't.
+@usingany GLMakie
+include(srcdir("utils", "PlotUtils.jl"))
 
 using KalmanFreq
 
@@ -89,8 +93,8 @@ vary = varest(ỹ)                   # Noise variance estimation
 H = frf(ωₙ, ξₙ, ϕₘ, ϕᵢ, freqH)
 
 ## Baysesian Filter
-R = Diagonal(vary) # Measurement noise covariance matrix
-Q = 1e-10I         # Process noise covariance matrix
+R = Diagonal(vary)  # Measurement noise covariance matrix
+Q = (2.5e-3Δf)^2*I  # Process noise covariance matrix
 
 prob_bf = BayesianFilterProblem(H, ỹ, Q, R) # Problem definition
 sol_bf = solve(prob_bf)                     # Problem resolution
@@ -110,7 +114,6 @@ u_rvr = solve(prob_rvr)
 ## lq_reg
 q = 0.5
 prob_lq = LqRegProblem(H[2:end-1], ỹ, q, R)
-# prob_lq = LqRegProblem(H[2:end-1], ỹ, q, R, type = :add, method = :lc)
 u_lq = solve(prob_lq)
 
 ## lpq_reg
@@ -119,36 +122,36 @@ prob_lpq = LpqRegProblem(H[2:end-1], ỹ, p, q, R)
 u_lpq = solve(prob_lpq)
 
 ## Visualiztion Bayesian Filter
-fig_bfw = waterfall_plot(freq, Xᵢ, real(u_bf), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(real(u_bf)), 1.12*maximum(real(u_bf))]);
+fig_bfw = waterfall_plot(freq, Xᵢ, abs.(u_bf), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(abs.(u_bf)), 1.12*maximum(abs.(u_bf))]);
 display(GLMakie.Screen(), fig_bfw);
 
-fig_bfs = plot(freq, F, real(u_bf[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.);
+fig_bfs = plot(freq, F, abs.(u_bf[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.);
 display(GLMakie.Screen(), fig_bfs);
 
 ## Visualization Bayesian Filter - Reverse mode
-fig_bfrw = waterfall_plot(freq, Xᵢ,  real(u_bfr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(real(u_bfr)), 1.12*maximum(real(u_bfr))]);
+fig_bfrw = waterfall_plot(freq, Xᵢ,  abs.(u_bfr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(abs.(u_bfr)), 1.12*maximum(abs.(u_bfr))]);
 display(GLMakie.Screen(), fig_bfrw);
 
-fig_bfrs = plot(freq, F, real(u_bfr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.);
+fig_bfrs = plot(freq, F, abs.(u_bfr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.);
 display(GLMakie.Screen(), fig_bfrs);
 
 ## Visualization RVR
-fig_rvrw = waterfall_plot(freq, Xᵢ, real(u_rvr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_rvr)), 1.12*maximum(real(u_rvr))]);
+fig_rvrw = waterfall_plot(freq, Xᵢ, abs.(u_rvr), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_rvr)), 1.12*maximum(abs.(u_rvr))]);
 display(GLMakie.Screen(), fig_rvrw);
 
-fig_rvrs = plot(freq, F, real(u_rvr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.);
+fig_rvrs = plot(freq, F, abs.(u_rvr[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.);
 display(GLMakie.Screen(), fig_rvrs);
 
 ## Visualization lq-regularization
-fig_lqw = waterfall_plot(freq, Xᵢ, real(u_lq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(real(u_lq)), 1.12*maximum(real(u_lq))]);
+fig_lqw = waterfall_plot(freq, Xᵢ, abs.(u_lq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [minimum(abs.(u_lq)), 1.12*maximum(abs.(u_lq))]);
 display(GLMakie.Screen(), fig_lqw);
 
-fig_lqs = plot(freq, F, real(u_lq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.);
+fig_lqs = plot(freq, F, abs.(u_lq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.);
 display(GLMakie.Screen(), fig_lqs);
 
 ## Visualization lpq-regularization
-fig_lpqw = waterfall_plot(freq, Xᵢ, real(u_lpq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force (N) - Real part", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(real(u_lpq)), 1.12*maximum(real(u_lpq))]);
+fig_lpqw = waterfall_plot(freq, Xᵢ, abs.(u_lpq), xlab = "Frequency (Hz)", ylab = "Location (m)", zlab = "Force amplitude (N)", xlim = [fmin, fmax], ylim = [0, L], zlim = [-5e-2 + minimum(abs.(u_lpq)), 1.12*maximum(abs.(u_lpq))]);
 display(GLMakie.Screen(), fig_lpqw);
 
-fig_lpqs = plot(freq, F, real(u_lpq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force (N) - Real part", lw = 2.);
+fig_lpqs = plot(freq, F, abs.(u_lpq[Nₑ, :]); xlab = "Frequency (Hz)", ylab = "Force amplitude (N)", lw = 2.);
 display(GLMakie.Screen(), fig_lpqs);
