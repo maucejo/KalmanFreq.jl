@@ -50,5 +50,5 @@ which auto-activate the project and enable local path handling from DrWatson.
 
 MIT licensed
 
-Copyright (C) 2022 Mathieu AUCEJO (maucejo)
+Copyright (C) 2025 Mathieu AUCEJO (maucejo)
 
