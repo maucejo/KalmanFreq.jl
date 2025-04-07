@@ -1,6 +1,6 @@
 # KalmanFreq.jl
 
-[![Generic badge](https://img.shields.io/badge/Licence-MIT-<COLOR>.svg)]()  [![Generic badge](https://img.shields.io/badge/Version-0.1.0-blue.svg)]()
+[![Generic badge](https://img.shields.io/badge/Licence-MIT-<COLOR>.svg)]()  [![Generic badge](https://img.shields.io/badge/Version-0.1.0-blue.svg)]() [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15165899.svg)](https://doi.org/10.5281/zenodo.15165899)
 
 KalmanFrequency.jl is a [Julia](https://julialang.org/) project, powered by  [DrWatson.jl](https://juliadynamics.github.io/DrWatson.jl/stable/), which is the companion code base of the paper:
 
